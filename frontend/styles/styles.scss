@@ -1,0 +1,250 @@
+pre {
+    font-size: inherit;
+    color: inherit;
+    border: initial;
+    padding: initial;
+    font-family: inherit;
+    text-wrap: balance;
+}
+
+button.small {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    height: 40px;
+}
+
+.answer-page {
+    max-width: 800px;
+    padding-top: 20vh;
+    margin: auto;
+
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .brand-name {
+        padding-left: 4px;
+    }
+}
+
+.chat-history {
+    margin: auto;
+    max-width: 1200px;
+    padding-top: 3.5rem;
+
+    pre.chat-message {
+        min-height: 50px;
+        background-color: inherit;
+        display: flex;
+        max-width: 800px;
+        align-items: flex-end;
+        line-height: 1.5rem;
+    }
+
+    pre.human-message {
+        justify-content: flex-end;
+        max-width: unset;
+
+        // and not first element
+        &:not(:first-child) {
+            padding-top: 3rem;
+        }
+    }
+}
+
+.search-form {
+    display: flex;
+    position: relative;
+    margin-top: 2rem;
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 18px;
+    }
+
+    .search-button {
+        position: absolute;
+
+        padding: 5px;
+        right: 10px;
+        top: 10px;
+    }
+
+    input {
+        padding-left: 50px;
+    }
+}
+
+.toggle {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.continue-chat-search-form {
+    max-width: 800px;
+    margin: auto;
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+}
+
+.continue-chat-settings {
+    button.reset-button {
+        margin-top: 1rem;
+        text-align: right;
+        .reset-button-text {
+            padding-left: 5px;
+        }
+    }
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.voice-recorder {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .recording-button {
+        margin-left: 1rem;
+    }
+
+    .recording-button.isRecording {
+        background-color: #f00;
+        color: white;
+    }
+}
+
+// Modals
+
+dialog.modal {
+    article {
+        padding: 3.5rem;
+        max-width: 800px;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.save-settings {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.file-dropzone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+div.upload-helpers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+svg.file-upload {
+    width: 50px;
+    height: 50px;
+}
+
+.upload-wrapper {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: center;
+
+    .files {
+        span {
+            padding-right: 10px;
+        }
+
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.remove-file-button {
+    background-color: #f00;
+    border-color: #f00;
+    color: #fff;
+    padding: 5px;
+    font-size: xx-small;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+// Typing Animation
+.ai-answering {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.typing {
+  width: 5em;
+  height: 20px;
+  display: inline;
+  padding-left: 10px;
+}
+
+.typing__dot {
+  float: left;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  background: #8d8c91;
+  border-radius: 50%;
+  opacity: 0;
+  animation: loadingFade 1s infinite;
+}
+
+.typing__dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loadingFade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}

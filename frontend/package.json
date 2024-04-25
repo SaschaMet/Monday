@@ -1,0 +1,39 @@
+{
+    "name": "frontend",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@langchain/core": "^0.1.58",
+        "@lmstudio/sdk": "^0.0.3",
+        "@qdrant/js-client-rest": "^1.9.0",
+        "@qdrant/qdrant-js": "^1.9.0",
+        "@tabler/icons": "^2.4.0",
+        "@tabler/icons-react": "^2.4.0",
+        "cohere-ai": "^7.9.5",
+        "extendable-media-recorder": "^9.2.0",
+        "extendable-media-recorder-wav-encoder": "^7.0.109",
+        "next": "^14.2.1",
+        "openai": "^4.38.3",
+        "react": "^18.2.0",
+        "react-audio-voice-recorder": "^2.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@types/jsdom": "^21.1.0",
+        "@types/node": "^20.12.7",
+        "@types/react": "^18.2.79",
+        "@types/react-dom": "^18.2.25",
+        "autoprefixer": "^10.4.13",
+        "eslint": "^8.57.0",
+        "eslint-config-next": "^14.2.2",
+        "jsdom": "^24.0.0",
+        "sass": "^1.75.0",
+        "typescript": "^5.4.5"
+    }
+}

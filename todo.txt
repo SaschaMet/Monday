@@ -1,0 +1,30 @@
+# General
+
+- [ ] push to git!
+- [ ] Add a token counter
+- [ ] Add a database to store the chat history (https://www.npmjs.com/package/idb-keyval/v/3.0.0)
+
+# Frontend
+
+- [x] add chat history to RAG
+- [ ] add voice chat
+- [ ] add possibility to active the voice recorder automatically
+
+- [ ] add retry mechanism
+    - [ ] with the same model and a different temperature
+    - [ ] with a different model
+
+- [ ] Add different system prompts (personas) (Therapeut, Mentor, QA, …)
+
+- [ ] Summarize after 12 chats (but skip system prompt)
+
+
+# Backend
+
+- [ ] add cohere re-ranker
+- [x] add cohere embedding
+- [ ] add possibility to use cohere command-r plus instead of the default one
+
+- [ ] For English texts, use local voice - for german output use the cloud voice
+        => or translate every text to english and use the local voice
+        => Whisper do not translate English for German qa

@@ -1,0 +1,24 @@
+{
+    "cSpell.words": [
+        "bettertransformer",
+        "Chunker",
+        "dataavailable",
+        "distil",
+        "fastembed",
+        "GGUF",
+        "langserve",
+        "lmstudio",
+        "Matthijs",
+        "Ollama",
+        "Parler",
+        "pydantic",
+        "qwen",
+        "safetensors",
+        "soundfile",
+        "texttospeech",
+        "unsqueeze",
+        "uvicorn",
+        "wizardlm",
+        "xvector"
+    ]
+}

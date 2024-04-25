@@ -1,0 +1,10 @@
+pydantic
+langchain_core
+uvicorn
+fastapi
+python-dotenv
+torch
+qdrant_client
+transformers
+google-cloud-texttospeech
+python-multipart
