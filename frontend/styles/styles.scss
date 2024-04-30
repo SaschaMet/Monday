@@ -1,3 +1,7 @@
+:root {
+    --pico-font-size: 16px;
+}
+
 pre {
     font-size: inherit;
     color: inherit;
@@ -16,6 +20,30 @@ button.small {
     height: 40px;
 }
 
+.nav-wrapper {
+    background-color: rgba(19,22,30,255);
+    position: sticky;
+    top: 0;
+
+    .container {
+        border-bottom: 1px solid lightyellow;
+    }
+}
+
+nav {
+    align-items: center;
+}
+
+nav li {
+    font-size: 14px;
+    color: #ccc;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .answer-page {
     max-width: 800px;
     padding-top: 20vh;
@@ -25,10 +53,14 @@ button.small {
         display: flex;
         align-items: center;
         justify-content: center;
+        svg {
+            color: lightyellow;
+        }
     }
 
     .brand-name {
         padding-left: 4px;
+        color: lightyellow;
     }
 }
 
@@ -36,12 +68,13 @@ button.small {
     margin: auto;
     max-width: 1200px;
     padding-top: 3.5rem;
+    font-size: 19px;
 
     pre.chat-message {
         min-height: 50px;
         background-color: inherit;
         display: flex;
-        max-width: 800px;
+        max-width: 750px;
         align-items: flex-end;
         line-height: 1.5rem;
     }
@@ -49,11 +82,22 @@ button.small {
     pre.human-message {
         justify-content: flex-end;
         max-width: unset;
+        text-align: right;
+        padding-left: 50%;
+        color: lightyellow;
+
 
         // and not first element
         &:not(:first-child) {
-            padding-top: 3rem;
+            cursor: pointer;
+            padding-top: 2rem;
+            padding-bottom: 1rem;
         }
+    }
+
+    pre.remove-message {
+        color: salmon;
+        text-decoration: line-through;
     }
 }
 
@@ -76,9 +120,19 @@ button.small {
         top: 10px;
     }
 
-    input {
+    textarea {
         padding-left: 50px;
+        padding-right: 60px;
+        margin-bottom: 0;
     }
+}
+
+.token-counter {
+    font-size: x-small;
+}
+
+.token-counter-history {
+    padding-bottom: 10px;
 }
 
 .toggle {
@@ -123,12 +177,19 @@ button.small {
     }
 }
 
-// Modals
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
 
+// Modals
 dialog.modal {
     article {
         padding: 3.5rem;
-        max-width: 800px;
+        max-width: 1200px;
+        min-height: 80vh;
     }
 
     .modal-header {
@@ -138,17 +199,23 @@ dialog.modal {
     }
 }
 
-.settings {
+.modal-input {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+
+    label {
+        min-width: 150px;
+    }
 }
 
-.save-settings {
+.modal-save-button {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
 }
+
+
+
 
 .file-dropzone {
     display: flex;

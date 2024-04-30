@@ -1,34 +1,38 @@
-import { LLMChatHistory, LLMChatHistoryMessage } from "@lmstudio/sdk";
-import { generateUuid } from "@/utils/generateUuid";
-import Qdrant from "./qdrant";
 import OpenAI from 'openai';
+import Qdrant from "./qdrant";
+import { countHistoryTokens } from '@/utils/countHistoryTokens';
+import { generateUuid } from "@/utils/generateUuid";
+import { LmmSettings, ChatHistoryMessage } from "@/types";
 
-const systemMessage = {
-    "content": "You are a helpful AI assistant named Monday. You have a professional tone and a sarcastic attitude with a mix of sarcasm and dark humor. You complete every task and request as best you can. You think through every task step by step to make sure you give the best possible answer. You always end with a open ended question to continue the chat.",
-    "role": "system",
-    "id": generateUuid(),
-} as LLMChatHistoryMessage;
-
-
-class SearchHandler {
-    private useDocuments: boolean;
+class ChatHandler {
     private onAnswerUpdate: Function;
     private updateHistory: Function;
+    private setTokens: Function;
+    private llmSettings: LmmSettings;
     private qdrant: Qdrant;
     private llm: OpenAI;
+    private replaceHistory: Function;
+    private setModifyHistory: Function;
 
-    constructor(onAnswerUpdate: Function, updateHistory: Function, useDocuments: boolean) {
+    constructor(onAnswerUpdate: Function, updateHistory: Function, setTokens: Function, llmSettings: LmmSettings, replaceHistory: Function, setModifyHistory: Function) {
         this.onAnswerUpdate = onAnswerUpdate;
-        this.useDocuments = useDocuments;
+        this.setTokens = setTokens;
         this.updateHistory = updateHistory;
-        this.qdrant = new Qdrant();
-        this.llm = new OpenAI({ baseURL: "http://localhost:1234/v1", apiKey: "lm-studio", dangerouslyAllowBrowser: true });
+        this.llmSettings = llmSettings;
+        this.replaceHistory = replaceHistory;
+        this.setModifyHistory = setModifyHistory;
+        this.qdrant = new Qdrant(llmSettings.qdrantHost, llmSettings.qdrantPort);
+        this.llm = new OpenAI({
+            baseURL: this.llmSettings.chatEndpoint,
+            apiKey: this.llmSettings.chatEndpointApiKey,
+            dangerouslyAllowBrowser: true
+        });
     }
 
-    prepareHistory(history: LLMChatHistory) {
+    prepareHistory(history: ChatHistoryMessage[]) {
         let messages = [
             ...history,
-        ] as LLMChatHistory;
+        ] as ChatHistoryMessage[];
 
         // make sure the messages are clean and easy to understand for the AI
         messages = messages
@@ -66,7 +70,9 @@ class SearchHandler {
         }
     }
 
-    async handleStream(query: string, history: LLMChatHistory = []) {
+
+
+    async chat(query: string, history: ChatHistoryMessage[] = [], useDocuments = false, streamResponse: Boolean = false) {
         try {
             if (!query) {
                 alert("Please enter a query");
@@ -74,18 +80,27 @@ class SearchHandler {
             }
 
             const humanMessage = {
-                "content": query,
+                "content": query.trim(),
                 "role": "user",
                 "id": generateUuid(),
-            } as LLMChatHistoryMessage;
+            } as ChatHistoryMessage;
+
+            // check if the history includes messages which need to be removed
+            const historyWithoutRemovedMessages = history.filter((message) => !message.toBeRemoved);
+
+            // if the history includes messages which need to be removed, update the history
+            if (historyWithoutRemovedMessages.length !== history.length) {
+                this.replaceHistory(historyWithoutRemovedMessages);
+                this.setModifyHistory(false)
+            }
 
             let messages = [
-                ...history,
-            ] as LLMChatHistory;
+                ...historyWithoutRemovedMessages
+            ] as ChatHistoryMessage[];
 
             // if the first message is not the system message, add it to the messages
             if (messages.length === 0 || messages[0].role !== "system") {
-                messages = [systemMessage, ...messages];
+                messages = [this.llmSettings.systemMessage, ...messages];
             }
 
             // if the content of the human message does not end with a question mark, a period, or an exclamation mark, add a dot at the end
@@ -103,42 +118,64 @@ class SearchHandler {
             // add the human message to the messages
             messages.push(humanMessage);
 
-            if (this.useDocuments) {
+            if (useDocuments) {
                 const ragAnswer = await this.handleRag(query);
                 const ragMessage = {
                     "content": ragAnswer,
                     "role": "user",
                     "id": generateUuid(),
-                } as LLMChatHistoryMessage;
+                } as ChatHistoryMessage;
                 messages.push(ragMessage);
             }
 
-            const stream = this.llm.beta.chat.completions.stream({
-                messages,
-                max_tokens: 512,
-                temperature: 0.1,
-                model: "",
-            })
-
-            const chunks = [];
-            for await (const chunk of stream) {
-                this.onAnswerUpdate(chunk.choices[0].delta.content);
-                chunks.push(chunk.choices[0].delta.content);
-            }
+            // count the tokens of the history
+            countHistoryTokens(messages, this.setTokens);
 
             const aiMessage = {
-                "content": chunks.join(""),
+                "content": "",
                 "id": generateUuid(),
                 "role": "assistant",
-            } as LLMChatHistoryMessage;
+            } as ChatHistoryMessage;
+
+            if (streamResponse) {
+                const stream = this.llm.beta.chat.completions.stream({
+                    messages,
+                    max_tokens: this.llmSettings.max_tokens,
+                    temperature: this.llmSettings.temperature,
+                    model: "",
+                })
+
+                const chunks = [];
+                for await (const chunk of stream) {
+                    this.onAnswerUpdate(chunk.choices[0].delta.content);
+                    chunks.push(chunk.choices[0].delta.content);
+                }
+
+                aiMessage.content = chunks.join("");
+            } else {
+                const aiResponse = await this.llm.chat.completions.create({
+                    messages,
+                    max_tokens: this.llmSettings.max_tokens,
+                    temperature: this.llmSettings.temperature,
+                    model: "",
+                })
+                aiMessage.content = aiResponse.choices[0].message.content!;
+            }
+
+            countHistoryTokens([
+                ...messages,
+                aiMessage,
+            ], this.setTokens);
 
             this.updateHistory(aiMessage);
+
+            return aiMessage.content;
         } catch (err) {
             console.error(err);
         }
     };
 }
 
-export default SearchHandler;
+export default ChatHandler;
 
 

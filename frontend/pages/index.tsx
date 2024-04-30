@@ -1,32 +1,25 @@
 import Head from "next/head";
+import { useContext } from "react";
 import { Answer } from "@/components/Answer";
 import { Search } from "@/components/Search";
-import { useState } from "react";
-import { HistoryItem } from "@/types";
+import { IconBookmarkAi } from "@tabler/icons-react";
+import { SettingsModal } from "@/elements/SettingsModal";
+import { PromptTemplateModal } from "@/elements/PromptTemplateModal";
+import { StoreContext } from "@/components/StoreContext";
+import { StoreInterface } from "@/types";
 
 export default function Home() {
-    const [searchDocuments, setSearchDocuments] = useState<boolean>(false);
-    const [keepRecording, setKeepRecording] = useState<boolean>(false);
-    const [history, setHistory] = useState<HistoryItem[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [answer, setAnswer] = useState<string>("");
-    const [done, setDone] = useState<boolean>(false);
 
-    function updateAnswer(value: string) {
-        setAnswer((prev) => prev + value);
-        window.scrollTo(0, document.body.scrollHeight);
-        setLoading(false);
-    }
-
-    const updateHistory = (message: HistoryItem) => {
-        setHistory(prevHistory => [
-            ...prevHistory,
-            message,
-        ]);
-        setAnswer("");
-        setDone(true);
-    };
-
+    const store = useContext(StoreContext);
+    const {
+        showPromptTemplates,
+        setShowPromptTemplates,
+        showSettings,
+        setShowSettings,
+        answer,
+        history,
+        loading,
+    } = store as StoreInterface;
 
     return (
         <>
@@ -45,37 +38,39 @@ export default function Home() {
                     href="/favicon.png"
                 />
             </Head>
+            <div className="nav-wrapper">
+                <div className="container">
+                    <nav>
+                        <div>
+                            <IconBookmarkAi scale={12} />
+                        </div>
+                        <div>
+                            <ul>
+                                <li onClick={() => setShowPromptTemplates(true)} >Prompt Templates</li>
+                                <li onClick={() => setShowSettings(true)} >Settings</li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
             <div className="container">
                 {Boolean(answer.length) || Boolean(history.length) || loading ? (
-                    <Answer
-                        searchDocuments={searchDocuments}
-                        setSearchDocuments={() => setSearchDocuments(!searchDocuments)}
-                        history={history}
-                        answer={answer}
-                        done={done}
-                        onReset={() => {
-                            setHistory([]);
-                            setDone(false);
-                            setLoading(false);
-                        }}
-                        onAnswerUpdate={updateAnswer}
-                        updateHistory={updateHistory}
-                        setLoading={setLoading}
-                        loading={loading}
-                        keepRecording={keepRecording}
-                        setKeepRecording={setKeepRecording}
-                    />
+                    <Answer />
                 ) : (
-                    <Search
-                        setSearchDocuments={() => setSearchDocuments(!searchDocuments)}
-                        onAnswerUpdate={updateAnswer}
-                        updateHistory={updateHistory}
-                        setLoading={setLoading}
-                        keepRecording={keepRecording}
-                        setKeepRecording={setKeepRecording}
-                    />
+                    <Search />
                 )}
             </div>
+            {showSettings && (
+                <SettingsModal
+                    setShowSettings={setShowSettings}
+                />
+            )}
+            {showPromptTemplates && (
+                <PromptTemplateModal
+                    setShowPromptTemplateModal={setShowPromptTemplates}
+                    handleSave={() => console.log("Save prompt templates")}
+                />
+            )}
         </>
     );
 }

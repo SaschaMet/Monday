@@ -21,8 +21,8 @@
 
 ```bash
     cd ./frontend && npm run build && npm run start & \
-    cd ./backend && cd ./app && uvicorn server:app & \
-    cd ./qdrant && sh ./start-qdrant.sh
+    cd .. && cd ./qdrant && sh ./start-qdrant.sh & \
+    cd .. && cd ./backend && cd ./app && uvicorn server:app
 ```
 
 or
@@ -32,6 +32,17 @@ or
     cd ./frontend && npm run build && npm run start
     # Terminal 2
     cd ./backend && cd ./app && uvicorn server:app
+    # Terminal 3
+    cd ./qdrant && sh ./start-qdrant.sh
+```
+
+or for development
+
+```bash
+    # Terminal 1
+    cd ./frontend && npm run dev
+    # Terminal 2
+    cd ./backend && cd ./app && uvicorn server:app --reload
     # Terminal 3
     cd ./qdrant && sh ./start-qdrant.sh
 ```

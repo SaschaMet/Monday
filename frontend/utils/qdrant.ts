@@ -5,8 +5,8 @@ class Qdrant {
     private client: QdrantClient;
     private co: CohereClient;
 
-    constructor() {
-        this.client = new QdrantClient({ host: '127.0.0.1', port: 6333 });
+    constructor(host: string, port: number) {
+        this.client = new QdrantClient({ host, port });
         this.co = new CohereClient({
             token: "",
         });

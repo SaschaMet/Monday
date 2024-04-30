@@ -1,50 +1,112 @@
 import dynamic from 'next/dynamic'
-import { IconReload } from "@tabler/icons-react";
-import { FC } from "react";
+import { IconReload, } from "@tabler/icons-react";
+import { FC, useContext, useEffect, useState, } from "react";
 import { Toggle } from "@/components/Toggle";
 import { SearchForm } from "@/elements/SearchForm";
-import { HistoryItem } from "@/types";
+import { StoreContext } from "@/components/StoreContext";
+import { StoreInterface } from "@/types";
 
 // @ts-ignore
 const VoiceRecorderElement = dynamic(() => import('@/elements/VoiceRecorder'), {
     ssr: false,
 })
 
-interface AnswerProps {
-    answer: string | null;
-    history: HistoryItem[];
-    done: boolean;
-    searchDocuments: boolean;
-    onReset: () => void;
-    setSearchDocuments: () => void;
-    onAnswerUpdate: (answer: string) => void;
-    updateHistory: (message: HistoryItem) => void;
-    setLoading: Function;
-    loading: boolean;
-    keepRecording: boolean;
-    setKeepRecording: (value: boolean) => void;
-}
+export const Answer: FC = () => {
+    const store = useContext(StoreContext);
+    const {
+        setSearchDocuments,
+        keepRecording,
+        setKeepRecording,
+        history,
+        replaceHistory,
+        setDone,
+        setLoading,
+        loading,
+        answer,
+        tokens,
+        modifyHistory,
+        setModifyHistory,
+    } = store as StoreInterface;
 
-export const Answer: FC<AnswerProps> = ({
-    history,
-    answer,
-    done,
-    onReset,
-    searchDocuments,
-    setSearchDocuments,
-    onAnswerUpdate,
-    updateHistory,
-    setLoading,
-    loading,
-    keepRecording,
-    setKeepRecording
-}) => {
+    const [clickedHumanMessage, setClickedHumanMessage] = useState<number | undefined>(undefined);
+
+    const onReset = () => {
+        replaceHistory([]);
+        setDone(false);
+        setLoading(false);
+    };
+
+    const onChangeFunction = () => {
+        setSearchDocuments((prev) => !prev);
+    };
+
+    const handleHumanMessageClick = (e: React.MouseEvent<HTMLPreElement, MouseEvent>) => {
+        e.preventDefault();
+        const target = e.target as HTMLPreElement;
+        if (target && !target.classList.contains('human-message')) {
+            return;
+        }
+
+        // return if it is the first message
+        if (target.id === history[0].id) {
+            return;
+        }
+
+        if (clickedHumanMessage !== undefined) {
+            setClickedHumanMessage(undefined);
+            return;
+        }
+
+        const index = history.findIndex((message) => message.id === target.id);
+        setClickedHumanMessage(index);
+    }
+
+    useEffect(() => {
+        // update the history when the clickedHumanMessage changes
+        const newHistory = history.map((message, index) => {
+            if (index >= clickedHumanMessage!) {
+                return {
+                    ...message,
+                    toBeRemoved: true,
+                };
+            }
+            return {
+                ...message,
+                toBeRemoved: false,
+            };
+        });
+
+        replaceHistory(newHistory);
+
+        if (clickedHumanMessage === undefined) {
+            setModifyHistory(false);
+        } else {
+            setModifyHistory(true);
+            // focus the search input
+            const input = document.getElementById("search-input") as HTMLTextAreaElement;
+            input.focus();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [clickedHumanMessage]);
+
+    useEffect(() => {
+        if (!modifyHistory) {
+            setClickedHumanMessage(undefined);
+        }
+    }, [modifyHistory]);
+
+
     return (
-
         <>
             <div className="chat-history">
                 {history.map((message, index) => (
-                    <pre key={index} className={`chat-message ${message.role === "user" ? "human-message" : "ai-message"}`}>{message.content}</pre>
+                    <pre
+                        key={index}
+                        id={message.id}
+                        onClick={handleHumanMessageClick}
+                        className={`chat-message ${message.role === "user" ? "human-message" : "ai-message"} ${clickedHumanMessage && clickedHumanMessage <= index && "remove-message"}`}>
+                        {message.content}
+                    </pre>
                 ))}
 
                 {loading && (
@@ -64,18 +126,12 @@ export const Answer: FC<AnswerProps> = ({
             </div>
 
             <div className="continue-chat-search-form">
-                <div className="">
-                    <SearchForm
-                        onAnswerUpdate={onAnswerUpdate}
-                        updateHistory={updateHistory}
-                        setLoading={setLoading}
-                        disabled={loading || !done}
-                        history={history}
-                    />
+                <div>
+                    <SearchForm />
                 </div>
                 <div className="continue-chat-settings">
                     <div className='settings'>
-                        <Toggle active={false} onChangeFunction={setSearchDocuments} labelText="Search Documents" />
+                        <Toggle active={false} onChangeFunction={onChangeFunction} labelText="Search Documents" />
                         <VoiceRecorderElement keepRecording={keepRecording} setKeepRecording={setKeepRecording} />
                     </div>
                     <div>
@@ -88,6 +144,9 @@ export const Answer: FC<AnswerProps> = ({
                         </button>
                     </div>
                 </div>
+            </div>
+            <div className="token-counter token-counter-history">
+                Tokens: {tokens}
             </div>
         </>
     );

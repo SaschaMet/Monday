@@ -7,4 +7,5 @@ torch
 qdrant_client
 transformers
 google-cloud-texttospeech
+google-cloud-speech
 python-multipart

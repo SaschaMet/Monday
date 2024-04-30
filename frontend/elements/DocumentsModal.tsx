@@ -53,7 +53,7 @@ export const DocumentsModel = ({
             </button>
 
             {showDocuments && (
-                <Modal headline={"Documents"} onClose={() => setShowDocuments(false)}>
+                <Modal headline={"Documents"} id="documents-modal" onClose={() => setShowDocuments(false)}>
                     <div className="file-dropzone">
                         <form className=""
                             onDrop={handleDrop}

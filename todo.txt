@@ -1,22 +1,25 @@
-# General
-
-- [ ] push to git!
-- [ ] Add a token counter
-- [ ] Add a database to store the chat history (https://www.npmjs.com/package/idb-keyval/v/3.0.0)
-
 # Frontend
 
-- [x] add chat history to RAG
-- [ ] add voice chat
 - [ ] add possibility to active the voice recorder automatically
 
-- [ ] add retry mechanism
-    - [ ] with the same model and a different temperature
-    - [ ] with a different model
+- [ ] Add a chat history
+    - [ ] Add a button to download the chat history
+    - [ ] Add a button to delete the chat history
+    - [ ] https://www.npmjs.com/package/mongodb
 
-- [ ] Add different system prompts (personas) (Therapeut, Mentor, QA, …)
+- [x] Add a way to access important pages
+    - [ ] Prompt templates
+            - [ ] Create a prompt template
+            - [ ] Edit a prompt template
+            - [ ] Delete a prompt template
+            - [ ] System prompts
+            - [ ] Use prompts
 
-- [ ] Summarize after 12 chats (but skip system prompt)
+            - [ ] Add possibility to add personas (Therapist, Mentor, QA, …)
+            - [ ] Chang system prompt, too!
+
+    - [ ] Add a chat history page
+    - [ ] Add a quiz page
 
 
 # Backend
@@ -28,3 +31,12 @@
 - [ ] For English texts, use local voice - for german output use the cloud voice
         => or translate every text to english and use the local voice
         => Whisper do not translate English for German qa
+
+- [ ] Create an OpenAI like API to chat with huggingface models or potentially models in the cloud (like LLAMA3 70b)
+
+# Quiz API
+
+- [ ] Add a quiz API -> learnabot
+    - [ ] Toggle in FE that activates the quiz
+
+- [ ] Quiz Creator API -> add a text and return a quiz question in the correct format
