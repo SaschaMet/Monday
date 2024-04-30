@@ -15,8 +15,6 @@ export const Answer: FC = () => {
     const store = useContext(StoreContext);
     const {
         setSearchDocuments,
-        keepRecording,
-        setKeepRecording,
         history,
         replaceHistory,
         setDone,
@@ -132,7 +130,7 @@ export const Answer: FC = () => {
                 <div className="continue-chat-settings">
                     <div className='settings'>
                         <Toggle active={false} onChangeFunction={onChangeFunction} labelText="Search Documents" />
-                        <VoiceRecorderElement keepRecording={keepRecording} setKeepRecording={setKeepRecording} />
+                        <VoiceRecorderElement />
                     </div>
                     <div>
                         <button

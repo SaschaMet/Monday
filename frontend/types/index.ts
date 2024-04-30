@@ -20,6 +20,7 @@ export interface LmmSettings {
     max_tokens: number;
     chatEndpoint: string;
     chatEndpointApiKey: string;
+    model: string;
     qdrantHost: string;
     qdrantPort: number;
     sttEndpoint: string;
@@ -34,9 +35,6 @@ export interface StoreInterface {
 
     searchDocuments: boolean;
     setSearchDocuments: React.Dispatch<React.SetStateAction<boolean>>;
-
-    keepRecording: boolean;
-    setKeepRecording: React.Dispatch<React.SetStateAction<boolean>>;
 
     showSettings: boolean;
     setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,6 +64,9 @@ export interface StoreInterface {
 
     modifyHistory: boolean;
     setModifyHistory: React.Dispatch<React.SetStateAction<boolean>>;
+
+    keepRecording: boolean;
+    setKeepRecording: React.Dispatch<React.SetStateAction<boolean>>;
 
     replaceHistory: (newHistory: HistoryItem[]) => void;
 }

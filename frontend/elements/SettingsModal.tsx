@@ -12,6 +12,7 @@ export const SettingsModal = ({
     const store = useContext(StoreContext);
     const { llmSettings, setLlmSettings } = store as StoreInterface;
     const {
+        model,
         temperature,
         max_tokens,
         chatEndpoint,
@@ -24,6 +25,15 @@ export const SettingsModal = ({
         <Modal headline={"Settings"} id="settings-modal" onClose={() => setShowSettings(false)}>
 
             <br />
+
+            <div className="modal-input">
+                <label>Model</label>
+                <input
+                    type="text"
+                    value={model}
+                    onChange={(e) => setLlmSettings({ ...llmSettings, model: e.target.value })}
+                />
+            </div>
 
             <div className="modal-input">
                 <label>Chat Endpoint</label>

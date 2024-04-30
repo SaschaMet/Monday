@@ -53,13 +53,10 @@ nav li {
         display: flex;
         align-items: center;
         justify-content: center;
-        svg {
-            color: lightyellow;
-        }
     }
 
     .brand-name {
-        padding-left: 4px;
+        padding-left: 12px;
         color: lightyellow;
     }
 }

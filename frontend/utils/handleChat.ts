@@ -142,7 +142,7 @@ class ChatHandler {
                     messages,
                     max_tokens: this.llmSettings.max_tokens,
                     temperature: this.llmSettings.temperature,
-                    model: "",
+                    model: this.llmSettings.model,
                 })
 
                 const chunks = [];
@@ -157,7 +157,7 @@ class ChatHandler {
                     messages,
                     max_tokens: this.llmSettings.max_tokens,
                     temperature: this.llmSettings.temperature,
-                    model: "",
+                    model: this.llmSettings.model,
                 })
                 aiMessage.content = aiResponse.choices[0].message.content!;
             }

@@ -22,7 +22,7 @@
 ```bash
     cd ./frontend && npm run build && npm run start & \
     cd .. && cd ./qdrant && sh ./start-qdrant.sh & \
-    cd .. && cd ./backend && cd ./app && uvicorn server:app
+    cd .. && cd ./backend && cd ./app && uvicorn server:app --port 2122
 ```
 
 or
@@ -31,7 +31,7 @@ or
     # Terminal 1
     cd ./frontend && npm run build && npm run start
     # Terminal 2
-    cd ./backend && cd ./app && uvicorn server:app
+    cd ./backend && cd ./app && uvicorn server:app --port 2122
     # Terminal 3
     cd ./qdrant && sh ./start-qdrant.sh
 ```
@@ -42,7 +42,7 @@ or for development
     # Terminal 1
     cd ./frontend && npm run dev
     # Terminal 2
-    cd ./backend && cd ./app && uvicorn server:app --reload
+    cd ./backend && cd ./app && uvicorn server:app --reload --port 2122
     # Terminal 3
     cd ./qdrant && sh ./start-qdrant.sh
 ```

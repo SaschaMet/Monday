@@ -1,3 +1,4 @@
 .env
 backend/test-nb.ipynb
 backend/content.txt
+backend/app/gcloud-credentials.json

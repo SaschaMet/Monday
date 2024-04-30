@@ -67,7 +67,7 @@ export const SearchForm: FC = () => {
                     onKeyDown={handleKeyDown}
                     disabled={loading}
                 />
-                <button className="search-button" disabled={loading} onClick={chat}>
+                <button className="search-button" id="search-button" disabled={loading} onClick={chat}>
                     <IconArrowRight className="arrow-icon" />
                 </button>
             </div>

@@ -5,8 +5,10 @@ from dotenv import load_dotenv
 import requests
 from google.cloud import texttospeech
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
-    "/Users/saschametzger/.config/gcloud/application_default_credentials.json"
+load_dotenv()
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv(
+    "GOOGLE_APPLICATION_CREDENTIALS"
 )
 
 
@@ -14,7 +16,7 @@ class TranscribeAndCreateVoice:
     """Transcribe and Create Voice"""
 
     def __init__(self):
-        load_dotenv()
+
         self.tts_client_google = texttospeech.TextToSpeechClient()
 
     def speech_to_text(self, audio_data):

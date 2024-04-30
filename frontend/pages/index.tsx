@@ -1,8 +1,8 @@
 import Head from "next/head";
+import Image from 'next/image'
 import { useContext } from "react";
 import { Answer } from "@/components/Answer";
 import { Search } from "@/components/Search";
-import { IconBookmarkAi } from "@tabler/icons-react";
 import { SettingsModal } from "@/elements/SettingsModal";
 import { PromptTemplateModal } from "@/elements/PromptTemplateModal";
 import { StoreContext } from "@/components/StoreContext";
@@ -35,14 +35,19 @@ export default function Home() {
                 />
                 <link
                     rel="icon"
-                    href="/favicon.png"
+                    href="/favicon.ico"
                 />
             </Head>
             <div className="nav-wrapper">
                 <div className="container">
                     <nav>
                         <div>
-                            <IconBookmarkAi scale={12} />
+                            <Image
+                                src="/favicon_package/favicon-32x32.png"
+                                width={32}
+                                height={32}
+                                alt="Monday Logo"
+                            />
                         </div>
                         <div>
                             <ul>

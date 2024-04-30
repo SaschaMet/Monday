@@ -28,10 +28,11 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
         max_tokens: 512,
         chatEndpoint: "http://localhost:1234/v1",
         chatEndpointApiKey: "lm-studio",
+        model: "",
         qdrantHost: "127.0.0.1",
         qdrantPort: 6333,
-        sttEndpoint: "http://localhost:8000/stt",
-        tssEndpoint: "http://localhost:8000/tts",
+        sttEndpoint: "http://localhost:2122/stt",
+        tssEndpoint: "http://localhost:2122/tts",
         useCloudVoice: false,
         systemMessage: systemMessage,
     });
@@ -61,8 +62,6 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
                 setShowPromptTemplates,
                 searchDocuments,
                 setSearchDocuments,
-                keepRecording,
-                setKeepRecording,
                 showSettings,
                 setShowSettings,
                 history,
@@ -84,6 +83,8 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
                 modifyHistory,
                 setModifyHistory,
                 replaceHistory,
+                keepRecording,
+                setKeepRecording,
             }}
         >
             {children}

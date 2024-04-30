@@ -1,29 +1,25 @@
 import OpenAI from 'openai';
-import { useEffect } from 'react';
+import { useEffect, useState, useContext, use } from 'react';
 import { Toggle } from "@/components/Toggle";
 import { IconMicrophone } from '@tabler/icons-react';
 import { useAudioRecorder } from 'react-audio-voice-recorder';
 import { StoreContext } from "@/components/StoreContext";
 import { StoreInterface, ChatHistoryMessage } from "@/types";
-import { useContext } from "react";
 import { generateUuid } from "@/utils/generateUuid";
 import ChatHandler from '@/utils/handleChat';
 
-interface VoiceRecorderProps {
-    keepRecording: boolean;
-    setKeepRecording: (value: boolean) => void;
-}
+const VoiceRecorder = () => {
 
-const VoiceRecorder = ({ keepRecording, setKeepRecording }: VoiceRecorderProps) => {
     const store = useContext(StoreContext);
-    const { llmSettings, history, updateHistory, setTokens, replaceHistory, updateAnswer, setModifyHistory, setLoading } = store as StoreInterface;
+    const { llmSettings, history, updateHistory, setTokens, replaceHistory, updateAnswer, setModifyHistory, setLoading, keepRecording, setKeepRecording } = store as StoreInterface;
     const {
         sttEndpoint,
         tssEndpoint,
     } = llmSettings;
 
-    const chatHandler = new ChatHandler(updateAnswer, updateHistory, setTokens, llmSettings, replaceHistory, setModifyHistory);
+    const [recording, setRecording] = useState(false);
 
+    const chatHandler = new ChatHandler(updateAnswer, updateHistory, setTokens, llmSettings, replaceHistory, setModifyHistory);
     const llm = new OpenAI({
         baseURL: llmSettings.chatEndpoint,
         apiKey: llmSettings.chatEndpointApiKey,
@@ -41,12 +37,18 @@ const VoiceRecorder = ({ keepRecording, setKeepRecording }: VoiceRecorderProps) 
         echoCancellation: true,
     });
 
-    function playAudio(audioBlob: Blob) {
+    const playBeep = async () => {
+        const file = "/beep.mp3"
+        const audio = new Audio(file);
+        audio.play();
+    }
+
+    async function playAudio(audioBlob: Blob) {
         try {
             if (audioBlob) {
                 const audio = new Audio();
                 audio.src = URL.createObjectURL(audioBlob);
-                audio.playbackRate = 1.6;
+                audio.playbackRate = 1.25;
                 audio.play();
             }
         } catch (error) {
@@ -107,7 +109,7 @@ const VoiceRecorder = ({ keepRecording, setKeepRecording }: VoiceRecorderProps) 
                 }),
             }).then(res => res.blob());
 
-            playAudio(ttsResponse as Blob);
+            await playAudio(ttsResponse as Blob);
 
         } catch (error) {
             console.error(error);
@@ -129,18 +131,62 @@ const VoiceRecorder = ({ keepRecording, setKeepRecording }: VoiceRecorderProps) 
         if (!recordingBlob) {
             return;
         }
-        if (recordingTime > 25) {
+        if (recordingTime > 15) {
             console.error('Recording time too long');
             return;
         }
+
+        playBeep();
         tts(recordingBlob, 'audio/wav');
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [recordingBlob])
+
+
+    function keyHandler(event: any) {
+        const inputElement = document.querySelector('input[name="Voice Chat"]') as HTMLInputElement;
+        if (inputElement && inputElement.checked) {
+            if (event.key === ' ') {
+                inputElement.blur();
+                setRecording(prevRecording => !prevRecording);
+            }
+        }
+    }
+
+    useEffect(() => {
+        const searchInput = document.querySelector('.search-input') as HTMLTextAreaElement;
+        const searchButton = document.querySelector('.search-button') as HTMLButtonElement;
+        if (keepRecording) {
+            searchInput.disabled = true;
+            searchButton.disabled = true;
+        } else {
+            searchInput.disabled = false;
+            searchButton.disabled = false;
+        }
+    }, [keepRecording]);
+
+    useEffect(() => {
+        if (recording) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [recording]);
+
+    useEffect(() => {
+        document.addEventListener('keypress', keyHandler);
+        return () => {
+            document.removeEventListener('keypress', keyHandler);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     return (
         <>
             <div className='voice-recorder'>
-                {/* <Toggle active={keepRecording} onChangeFunction={() => setKeepRecording(!keepRecording)} labelText="Voice Chat" /> */}
+                <Toggle active={keepRecording} onChangeFunction={() => setKeepRecording(!keepRecording)} labelText="Voice Chat" />
                 <button
                     onClick={toggleRecording}
                     className={`outline secondary small recording-button ${isRecording && "isRecording"}`}>

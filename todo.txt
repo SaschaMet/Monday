@@ -2,24 +2,21 @@
 
 - [ ] add possibility to active the voice recorder automatically
 
+- [ ] Add Prompt templates
+        - [ ] Create a prompt template
+        - [ ] Edit a prompt template
+        - [ ] Delete a prompt template
+        - [ ] System prompts
+        - [ ] Use prompts
+
+        - [ ] Add possibility to add personas (Therapist, Mentor, QA, …)
+        - [ ] Chang system prompt, too!
+
+- [ ] Add a quiz page
 - [ ] Add a chat history
     - [ ] Add a button to download the chat history
     - [ ] Add a button to delete the chat history
     - [ ] https://www.npmjs.com/package/mongodb
-
-- [x] Add a way to access important pages
-    - [ ] Prompt templates
-            - [ ] Create a prompt template
-            - [ ] Edit a prompt template
-            - [ ] Delete a prompt template
-            - [ ] System prompts
-            - [ ] Use prompts
-
-            - [ ] Add possibility to add personas (Therapist, Mentor, QA, …)
-            - [ ] Chang system prompt, too!
-
-    - [ ] Add a chat history page
-    - [ ] Add a quiz page
 
 
 # Backend
